@@ -7,8 +7,18 @@ require('dotenv').config({ path: '/.env' })
 const db = require('./db/db_connect')
 
 
-app.listen(process.env.PORT, () => {
-    console.log("SERVER IS LISTEN AT ", process.env.PORT)
-})
 
 db.connectDB()
+    .then(() => {
+        app.listen(process.env.PORT || 3000, () => {
+            console.log("SERVER IS LISTEN AT ", process.env.PORT)
+        })
+        app.on("Error", (error) => {
+            console.log("ERROR", error)
+            throw error
+        })
+
+    })
+    .catch((err) => {
+        console.log("MONGODB CONNECTION FAILED ERROR ", err)
+    })
